@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard | SrinivasNexus</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✦</text></svg>">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body class="admin-body">
+
+  <!-- ==========================================
+       PIN GATE OVERLAY (Strict Protection: 696969)
+       ========================================== -->
+  <div class="pin-gate" id="pinGate">
+    <div class="pin-card">
+      <div class="pin-shield-icon">🔐</div>
+      <div class="pin-header">
+        <div class="brand"><span class="brand-icon">✦</span> Srinivas<span>Nexus</span></div>
+        <h2>Administrator Portal</h2>
+        <p>Enter the 6-digit administrative security PIN to access the event management console & database rows.</p>
+      </div>
+
+      <!-- PIN Indicator Circles -->
+      <div class="pin-indicators" id="pinIndicators">
+        <span class="pin-dot"></span>
+        <span class="pin-dot"></span>
+        <span class="pin-dot"></span>
+        <span class="pin-dot"></span>
+        <span class="pin-dot"></span>
+        <span class="pin-dot"></span>
+      </div>
+
+      <!-- Hidden Input for accessibility & keyboard typing -->
+      <div class="pin-input-wrap">
+        <input type="password" id="pinInput" maxlength="6" inputmode="numeric" autocomplete="off" placeholder="••••••" autofocus>
+      </div>
+
+      <div class="pin-error" id="pinError" hidden>Incorrect PIN. Access Denied.</div>
+
+      <!-- On-screen Numeric Pad -->
+      <div class="pin-keypad">
+        <button type="button" class="key-btn" data-val="1">1</button>
+        <button type="button" class="key-btn" data-val="2">2</button>
+        <button type="button" class="key-btn" data-val="3">3</button>
+        <button type="button" class="key-btn" data-val="4">4</button>
+        <button type="button" class="key-btn" data-val="5">5</button>
+        <button type="button" class="key-btn" data-val="6">6</button>
+        <button type="button" class="key-btn" data-val="7">7</button>
+        <button type="button" class="key-btn" data-val="8">8</button>
+        <button type="button" class="key-btn" data-val="9">9</button>
+        <button type="button" class="key-btn key-action" id="pinClearBtn">Clear</button>
+        <button type="button" class="key-btn" data-val="0">0</button>
+        <button type="button" class="key-btn key-action" id="pinBackspaceBtn">⌫</button>
+      </div>
+
+      <div class="pin-footer">
+        <a href="index.html" class="back-link">← Return to Public Hub</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================
+       MAIN ADMIN DASHBOARD
+       ========================================== -->
+  <div class="admin-wrapper" id="adminWrapper" hidden>
+    
+    <!-- Top Bar -->
+    <header class="admin-navbar">
+      <div class="navbar-left">
+        <a class="brand" href="index.html">
+          <span class="brand-icon">✦</span> Srinivas<span>Nexus</span>
+        </a>
+        <span class="admin-badge">Admin Console</span>
+        <div class="db-status-pill" id="dbStatusPill" title="Connected to campus-pulse-b1181">
+          <span class="status-indicator"></span>
+          <span id="dbStatusText">Connecting Firestore...</span>
+        </div>
+      </div>
+      <div class="navbar-right">
+        <a href="index.html" target="_blank" class="nav-ghost-btn">
+          <span>🌐 View Public Site</span>
+          <span class="ext-icon">↗</span>
+        </a>
+        <button class="nav-ghost-btn" id="soundToggleAdmin" title="Sound Effects">
+          <span id="adminSoundIcon">🔊</span>
+        </button>
+        <button class="nav-ghost-btn danger" id="lockDashboardBtn">
+          <span>🔒 Lock Portal</span>
+        </button>
+      </div>
+    </header>
+
+    <main class="admin-container">
+      
+      <!-- Metrics Overview -->
+      <section class="metrics-grid">
+        <div class="metric-card">
+          <div class="metric-icon purple">📅</div>
+          <div class="metric-info">
+            <span class="metric-label">Total Events in DB</span>
+            <div class="metric-val-row">
+              <strong class="metric-value" id="metricEventsCount">0</strong>
+              <span class="metric-sub" id="metricEventsSub">0 upcoming · 0 past</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-icon blue">📝</div>
+          <div class="metric-info">
+            <span class="metric-label">Registrations Recorded</span>
+            <div class="metric-val-row">
+              <strong class="metric-value" id="metricRegistrationsCount">0</strong>
+              <span class="metric-sub">Stored in Firestore</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-icon orange">📢</div>
+          <div class="metric-info">
+            <span class="metric-label">Campus Announcements</span>
+            <div class="metric-val-row">
+              <strong class="metric-value" id="metricAnnouncementsCount">0</strong>
+              <span class="metric-sub">Live student alerts</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-icon green">⚡</div>
+          <div class="metric-info">
+            <span class="metric-label">Sync Status</span>
+            <div class="metric-val-row">
+              <strong class="metric-value" style="color:#10b981;">Active</strong>
+              <span class="metric-sub">Real-time DB Listener</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Navigation Tabs & Primary Actions -->
+      <section class="admin-action-row">
+        <div class="admin-tabs">
+          <button class="admin-tab active" data-tab="tab-events">
+            <span>📅</span> Events Management (<span id="tabEventsCount">0</span>)
+          </button>
+          <button class="admin-tab" data-tab="tab-registrations">
+            <span>📋</span> Student Registrations (<span id="tabRegsCount">0</span>)
+          </button>
+          <button class="admin-tab" data-tab="tab-announcements">
+            <span>📢</span> Announcements (<span id="tabAnnounceCount">0</span>)
+          </button>
+          <button class="admin-tab" data-tab="tab-database">
+            <span>🗄️</span> DB Row Inspector (All Data)
+          </button>
+        </div>
+
+        <div class="admin-toolbar-actions">
+          <button class="button-admin primary" id="openCreateEventBtn">
+            <span>+ Create New Event</span>
+          </button>
+          <button class="button-admin secondary" id="seedDefaultsBtn" title="Seed default pre-rendered events to Firestore if empty">
+            <span>⚡ Seed Default Events</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- ==========================================
+           TAB 1: EVENTS MANAGEMENT
+           ========================================== -->
+      <section class="tab-panel active" id="tab-events">
+        <div class="panel-header">
+          <div>
+            <h3>Campus Events Catalog</h3>
+            <p>Manage, create, update, or remove university events stored in Cloud Firestore.</p>
+          </div>
+          <div class="panel-filters">
+            <input type="search" id="eventSearch" class="admin-input-search" placeholder="Search events by title, venue...">
+            <select id="eventCategoryFilter" class="admin-select">
+              <option value="All">All Categories</option>
+              <option value="Technical">💻 Technical</option>
+              <option value="Cultural">🎭 Cultural</option>
+              <option value="Workshop">🧠 Workshop</option>
+              <option value="Sports">⚡ Sports</option>
+            </select>
+            <select id="eventStatusFilter" class="admin-select">
+              <option value="All">All Statuses</option>
+              <option value="Upcoming">Upcoming Only</option>
+              <option value="Past">Past / Concluded</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="admin-table-container">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Event Title & Tag</th>
+                <th>Category</th>
+                <th>Status</th>
+                <th>Date & Schedule</th>
+                <th>Venue</th>
+                <th>Official URL</th>
+                <th style="text-align:right;">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="eventsTableBody">
+              <tr>
+                <td colspan="7" class="table-loading">Loading events from Firestore...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ==========================================
+           TAB 2: REGISTRATIONS
+           ========================================== -->
+      <section class="tab-panel" id="tab-registrations">
+        <div class="panel-header">
+          <div>
+            <h3>Student Registrations Database</h3>
+            <p>View all student registration submissions captured in the Cloud Firestore <code>registrations</code> collection.</p>
+          </div>
+          <div class="panel-filters">
+            <input type="search" id="regSearch" class="admin-input-search" placeholder="Search by student name, email, event...">
+            <select id="regEventFilter" class="admin-select">
+              <option value="All">All Registered Events</option>
+            </select>
+            <button class="button-admin secondary" id="exportRegistrationsCsvBtn">
+              <span>📥 Export CSV</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="admin-table-container">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Student Name</th>
+                <th>College Email</th>
+                <th>Registered Event</th>
+                <th>Registration Date / Time</th>
+                <th>Record ID</th>
+                <th style="text-align:right;">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="registrationsTableBody">
+              <tr>
+                <td colspan="6" class="table-loading">Loading registrations from Firestore...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ==========================================
+           TAB 3: ANNOUNCEMENTS
+           ========================================== -->
+      <section class="tab-panel" id="tab-announcements">
+        <div class="panel-header">
+          <div>
+            <h3>Campus Alerts & Announcements</h3>
+            <p>Post and update broadcast alerts shown to students on the home page and in the side alert drawer.</p>
+          </div>
+          <div class="panel-filters">
+            <button class="button-admin primary" id="openCreateAnnouncementBtn">
+              <span>+ Post Announcement</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="admin-table-container">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Title</th>
+                <th>Category</th>
+                <th>Message Content</th>
+                <th>Created / Doc ID</th>
+                <th style="text-align:right;">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="announcementsTableBody">
+              <tr>
+                <td colspan="5" class="table-loading">Loading announcements...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ==========================================
+           TAB 4: RAW DB ROW INSPECTOR
+           ========================================== -->
+      <section class="tab-panel" id="tab-database">
+        <div class="panel-header">
+          <div>
+            <h3>Raw Firestore Collections Inspector</h3>
+            <p>Inspect every raw row and JSON structure directly stored across all database collections.</p>
+          </div>
+          <div class="panel-filters">
+            <select id="dbCollectionSelector" class="admin-select">
+              <option value="events">Collection: events</option>
+              <option value="registrations">Collection: registrations</option>
+              <option value="announcements">Collection: announcements</option>
+            </select>
+            <button class="button-admin secondary" id="refreshDbInspectorBtn">
+              <span>🔄 Refresh Data</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="raw-db-view">
+          <div class="raw-db-meta">
+            <span id="rawDocCount">Showing 0 documents</span>
+            <button class="button-copy-raw" id="copyRawJsonBtn">📋 Copy JSON</button>
+          </div>
+          <pre class="raw-json-block" id="rawJsonDisplay">Select a collection to view all raw database rows...</pre>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ==========================================
+       MODAL: CREATE / EDIT EVENT
+       ========================================== -->
+  <div class="modal-backdrop" id="eventEditorModal" hidden>
+    <div class="admin-modal">
+      <div class="admin-modal-header">
+        <div>
+          <span class="eyebrow">FIRESTORE EVENT EDITOR</span>
+          <h2 id="eventEditorTitle">Create New Campus Event</h2>
+        </div>
+        <button class="modal-close" id="closeEventEditorBtn" aria-label="Close dialog">×</button>
+      </div>
+
+      <form id="eventEditorForm">
+        <input type="hidden" id="editEventDocId" value="">
+
+        <div class="form-grid">
+          <div class="form-group full-width">
+            <label for="eventFormTitle">Event Title *</label>
+            <input type="text" id="eventFormTitle" class="admin-form-input" placeholder="e.g. CODEMEET 2026 or MECHNOVA 2K26" required>
+          </div>
+
+          <div class="form-group">
+            <label for="eventFormCategory">Category *</label>
+            <select id="eventFormCategory" class="admin-form-input" required>
+              <option value="Technical">💻 Technical</option>
+              <option value="Cultural">🎭 Cultural</option>
+              <option value="Workshop">🧠 Workshop</option>
+              <option value="Sports">⚡ Sports</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="eventFormStatus">Event Status *</label>
+            <select id="eventFormStatus" class="admin-form-input" required>
+              <option value="Upcoming">🟢 Upcoming</option>
+              <option value="Past">⚪ Past / Concluded</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="eventFormDate">Date Display String *</label>
+            <input type="text" id="eventFormDate" class="admin-form-input" placeholder="e.g. October 31 – November 2, 2026" required>
+          </div>
+
+          <div class="form-group">
+            <label for="eventFormTime">Time Schedule *</label>
+            <input type="text" id="eventFormTime" class="admin-form-input" placeholder="e.g. 9:30 AM onwards or All Day" required>
+          </div>
+
+          <div class="form-group full-width">
+            <label for="eventFormVenue">Venue / Location *</label>
+            <input type="text" id="eventFormVenue" class="admin-form-input" placeholder="e.g. SUIET Campus, Mukka or Open Air Auditorium" required>
+          </div>
+
+          <div class="form-group">
+            <label for="eventFormTag">Badge / Tag Label</label>
+            <input type="text" id="eventFormTag" class="admin-form-input" placeholder="e.g. Hackathon & Tech, University Fest">
+          </div>
+
+          <div class="form-group">
+            <label for="eventFormUrl">Official Website / Registration URL</label>
+            <input type="url" id="eventFormUrl" class="admin-form-input" placeholder="https://example.com or leave blank">
+          </div>
+
+          <div class="form-group full-width">
+            <label for="eventFormDescription">Event Description *</label>
+            <textarea id="eventFormDescription" rows="3" class="admin-form-input" placeholder="Write a complete description of the event, scheduled competitions, guests, guidelines..." required></textarea>
+          </div>
+
+          <div class="form-group full-width">
+            <label for="eventFormKeywords">Search Keywords (optional)</label>
+            <input type="text" id="eventFormKeywords" class="admin-form-input" placeholder="coding hackathon gaming webflow dance workshop (space or comma separated)">
+          </div>
+        </div>
+
+        <div class="admin-modal-footer">
+          <button type="button" class="button-admin secondary" id="cancelEventEditorBtn">Cancel</button>
+          <button type="submit" class="button-admin primary" id="saveEventSubmitBtn">Save to Firestore</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==========================================
+       MODAL: CREATE / EDIT ANNOUNCEMENT
+       ========================================== -->
+  <div class="modal-backdrop" id="announcementEditorModal" hidden>
+    <div class="admin-modal">
+      <div class="admin-modal-header">
+        <div>
+          <span class="eyebrow">CAMPUS ALERT BROADCAST</span>
+          <h2 id="announcementEditorTitle">Post Campus Announcement</h2>
+        </div>
+        <button class="modal-close" id="closeAnnouncementEditorBtn" aria-label="Close dialog">×</button>
+      </div>
+
+      <form id="announcementEditorForm">
+        <input type="hidden" id="editAnnouncementDocId" value="">
+
+        <div class="form-grid">
+          <div class="form-group full-width">
+            <label for="announcementFormTitle">Announcement Headline *</label>
+            <input type="text" id="announcementFormTitle" class="admin-form-input" placeholder="e.g. Kalaspandana 2K26 - Mega Variety Show" required>
+          </div>
+
+          <div class="form-group">
+            <label for="announcementFormCategory">Category *</label>
+            <select id="announcementFormCategory" class="admin-form-input" required>
+              <option value="General">General Notice</option>
+              <option value="Technical">Technical</option>
+              <option value="Cultural">Cultural</option>
+              <option value="Music">Music / Concert</option>
+              <option value="Sports">Sports</option>
+            </select>
+          </div>
+
+          <div class="form-group full-width">
+            <label for="announcementFormMessage">Message Details *</label>
+            <textarea id="announcementFormMessage" rows="3" class="admin-form-input" placeholder="Date, venue, timing, or important instructions..." required></textarea>
+          </div>
+        </div>
+
+        <div class="admin-modal-footer">
+          <button type="button" class="button-admin secondary" id="cancelAnnouncementEditorBtn">Cancel</button>
+          <button type="submit" class="button-admin primary" id="saveAnnouncementSubmitBtn">Publish to Feed</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==========================================
+       MODAL: CONFIRM DELETION
+       ========================================== -->
+  <div class="modal-backdrop" id="confirmDeleteModal" hidden>
+    <div class="admin-modal confirm-modal">
+      <div class="confirm-icon">⚠️</div>
+      <h3 id="confirmDeleteTitle">Confirm Deletion</h3>
+      <p id="confirmDeleteMessage">Are you sure you want to permanently delete this record from Firestore? This action cannot be undone.</p>
+      <div class="admin-modal-footer center">
+        <button type="button" class="button-admin secondary" id="cancelDeleteBtn">Cancel</button>
+        <button type="button" class="button-admin danger" id="proceedDeleteBtn">Permanently Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Firebase Integration & Admin Logic -->
+  <script type="module" src="admin.js"></script>
+</body>
+</html>

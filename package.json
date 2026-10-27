@@ -1,0 +1,14 @@
+{
+  "name": "srinivas-nexus",
+  "version": "1.0.0",
+  "description": "Campus Event Hub for Srinivas University",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^6.0.0"
+  }
+}

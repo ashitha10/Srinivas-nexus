@@ -1,0 +1,463 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SrinivasNexus | Srinivas University</title>
+
+  <!-- PWA & Theme Meta Tags -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#6d4aff">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="icon" type="image/svg+xml" href="icon.svg">
+  <link rel="apple-touch-icon" href="icon.svg">
+
+  <link rel="stylesheet" href="style.css">
+
+  <!-- UI Libraries -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+</head>
+
+<body>
+  <header class="navbar">
+    <a class="brand" href="#home"><span class="brand-icon">✦</span> Srinivas<span>Nexus</span></a>
+    <nav>
+      <a href="#home" class="nav-link active">Home</a>
+      <a href="#events" class="nav-link nav-link-explore"><span class="desktop-nav-text">Explore Events</span></a>
+      <a href="#about" class="nav-link">About</a>
+    </nav>
+    <div class="nav-actions">
+      <a class="nav-alert-btn" href="admin.html" aria-label="Admin Panel" title="Admin Panel">🔐</a>
+      <button class="nav-alert-btn" id="openDrawerNavBtn" aria-label="Open Announcements" title="Campus Alerts">
+        <span>🔔</span>
+        <span class="alert-pulse-badge" id="navAlertBadge"></span>
+      </button>
+      <button class="nav-sound-btn" id="soundToggleBtn" aria-label="Toggle Sound Effects" title="Earshot Sound FX: On">
+        <span id="soundIcon">🔊</span>
+      </button>
+      <a class="nav-cta" href="#events" id="navSearchBtn" aria-label="Search events" title="Search events">
+        <span class="desktop-cta-text">Find an Event ↗</span>
+        <span class="mobile-cta-search" aria-hidden="true">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"
+            stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+        </span>
+      </a>
+    </div>
+  </header>
+
+  <!-- Sidebar Alert Drawer & Overlay Backdrop -->
+  <div class="drawer-backdrop" id="announcementsBackdrop"></div>
+  <aside class="announcements-drawer" id="announcementsDrawer" aria-label="Campus Announcements">
+    <div class="drawer-header">
+      <div class="drawer-title-wrap">
+        <span class="drawer-bell-icon">🔔</span>
+        <div>
+          <h3>Campus Alerts</h3>
+          <span class="drawer-subtitle">Live Srinivas University Feed</span>
+        </div>
+      </div>
+      <div class="drawer-header-actions">
+        <span class="drawer-count-badge" id="drawerBadge">0</span>
+        <button class="drawer-close-btn" id="closeDrawerBtn" aria-label="Close alerts">✕</button>
+      </div>
+    </div>
+    <div class="drawer-body" id="announcementsList">
+      <div class="shimmer-card">
+        <div class="shimmer-line shimmer-title"></div>
+        <div class="shimmer-line shimmer-text"></div>
+        <div class="shimmer-line shimmer-text-short"></div>
+      </div>
+      <div class="shimmer-card">
+        <div class="shimmer-line shimmer-title"></div>
+        <div class="shimmer-line shimmer-text"></div>
+        <div class="shimmer-line shimmer-text-short"></div>
+      </div>
+    </div>
+    <div class="drawer-footer">
+      <span class="sync-dot"></span> Real-time Srinivas University Feed
+    </div>
+  </aside>
+
+  <!-- Floating Side Alert Pill (Always Accessible) -->
+  <button class="floating-alert-pill" id="floatingAlertBtn" aria-label="View Campus Alerts">
+    <span class="pill-pulse"></span>
+    <span class="pill-icon">📢</span>
+    <span class="pill-text">Alerts</span>
+    <span class="pill-badge" id="floatingBadge">0</span>
+  </button>
+
+  <main>
+    <section class="hero" id="home">
+      <div class="hero-content">
+        <div class="eyebrow"><span class="live-dot"></span> SRINIVAS UNIVERSITY · CAMPUS EVENTS</div>
+        <h1>Make campus life<br><span>unforgettable.</span></h1>
+        <p class="hero-text">Discover campus fests, cultural celebrations, technology events, and competitions at
+          Srinivas University.</p>
+        <div class="hero-actions">
+          <a href="#events" class="button button-light">Explore events →</a>
+          <div class="social-proof">Find your people. Join the fun.</div>
+        </div>
+        <div class="hero-stats">
+          <div><strong id="eventCount">5</strong><span>Events to explore</span></div>
+          <div><strong>04</strong><span>Event categories</span></div>
+          <div><strong>∞</strong><span>Memories to make</span></div>
+        </div>
+      </div>
+      <div class="hero-art">
+        <div class="orbit orbit-one"></div>
+        <div class="orbit orbit-two"></div>
+        <div class="poster poster-main">
+          <div class="poster-tag">SRINIVAS UNIVERSITY</div>
+          <div class="poster-graphic">
+            <span class="graphic-star">✳</span>
+            <span class="graphic-circle"></span>
+            <span class="graphic-line"></span>
+          </div>
+          <div class="poster-copy">
+            <small>LEARN · CREATE · CONNECT</small>
+            <h2>Ideas<br>in motion.</h2>
+            <span class="poster-bottom">YOUR NEXT CHAPTER STARTS HERE ↗</span>
+          </div>
+        </div>
+        <div class="floating-card card-top">
+          <span class="mini-icon">✦</span>
+          <div>
+            <strong>Campus life, all in one place</strong>
+            <small>Explore university events</small>
+          </div>
+        </div>
+        <div class="floating-card card-bottom">
+          <span class="calendar-icon">▦</span>
+          <div>
+            <strong>Past and upcoming events</strong>
+            <small>Browse. Explore. Get involved.</small>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="events-section" id="events">
+      <div class="section-heading">
+        <div>
+          <div class="eyebrow section-eyebrow">WHAT'S HAPPENING AT SUIET</div>
+          <h2>Find your <span>next experience.</span></h2>
+          <p>Explore events shared from university announcements.</p>
+        </div>
+        <div class="event-counter">
+          <span class="counter-dot"></span>
+          <span id="resultCount">5 events</span> listed
+        </div>
+      </div>
+
+      <div class="toolbar">
+        <label class="search-box">
+          <span>⌕</span>
+          <input id="searchInput" type="search" placeholder="Search event, venue, or keyword..."
+            aria-label="Search events">
+        </label>
+        <div class="category-filters">
+          <button class="filter-btn selected" data-category="All">All events</button>
+          <button class="filter-btn" data-category="Technical">💻 Technical</button>
+          <button class="filter-btn" data-category="Cultural">🎭 Cultural</button>
+          <button class="filter-btn" data-category="Workshop">🧠 Workshops</button>
+          <button class="filter-btn" data-category="Sports">⚡ Sports</button>
+          <button class="filter-btn" data-status="Upcoming">Upcoming</button>
+          <button class="filter-btn" data-status="Past">Past events</button>
+        </div>
+      </div>
+
+      <div class="event-grid" id="eventGrid">
+        <article class="event-card" data-event="MECHNOVA 2K26" data-category="Sports" data-status="Past"
+          data-search="mechnova aimes technical cultural sports badminton cricket dance reel photography portrait carrom tool challenge mehendi anime quiz tug of war ideathon exhibition rangoli">
+          <div class="event-image image-code">
+            <span class="image-label">TECH · CULTURE · SPORTS</span>
+            <span class="event-art">MECH<br>NOVA</span>
+            <span class="image-orbit"></span>
+          </div>
+          <div class="event-info">
+            <div class="event-date"><span>OCT</span><strong>05–08</strong></div>
+            <div class="event-details">
+              <h3>MECHNOVA 2K26 | AIMES</h3>
+              <p>Technical, cultural and sports competitions across three days.</p>
+              <div class="event-meta"><span>⌖ Venue not listed</span><span>◷ 5, 6 &amp; 8 Oct 2026</span></div>
+              <div class="status-row" style="margin-top:8px"><span class="status-pill past">COMPLETED</span></div>
+            </div>
+          </div>
+          <div class="event-footer">
+            <span class="tag tag-purple">Multi-event Fest</span>
+            <button class="register-btn" data-event="MECHNOVA 2K26">View event ↗</button>
+          </div>
+        </article>
+
+        <article class="event-card" data-event="Navaratri Vaibhava – Pilinalike 2026" data-category="Cultural"
+          data-status="Past" data-search="navaratri vaibhava pilinalike cultural traditions open air auditorium mukka">
+          <div class="event-image image-rhythm">
+            <span class="image-label">CULTURAL</span>
+            <span class="event-art">PILINALIKE<br><i>2026</i></span>
+            <span class="rhythm-disc"></span>
+          </div>
+          <div class="event-info">
+            <div class="event-date date-pink"><span>OCT</span><strong>17</strong></div>
+            <div class="event-details">
+              <h3>Navaratri Vaibhava – Pilinalike 2026</h3>
+              <p>Traditional cultural celebration by SUIET, Mukka.</p>
+              <div class="event-meta"><span>⌖ Open Air Auditorium</span><span>◷ 17 Oct 2026</span></div>
+              <div class="status-row" style="margin-top:8px"><span class="status-pill past">COMPLETED</span></div>
+            </div>
+          </div>
+          <div class="event-footer">
+            <span class="tag tag-pink">Cultural Celebration</span>
+            <button class="register-btn" data-event="Navaratri Vaibhava – Pilinalike 2026">View event ↗</button>
+          </div>
+        </article>
+
+        <article class="event-card" data-event="CODEMEET 2026" data-category="Technical" data-status="Upcoming"
+          data-search="codemeet webflow workshop speed typing free fire treasure hunt 24 hours national level hackathon">
+          <div class="event-image image-future">
+            <span class="image-label">TECHNICAL</span>
+            <span class="future-sun"></span>
+            <span class="future-title">CODE<br>MEET</span>
+            <span class="future-small">TECH · THRILL · INNOVATION</span>
+          </div>
+          <div class="event-info">
+            <div class="event-date date-blue"><span>OCT–NOV</span><strong>31–02</strong></div>
+            <div class="event-details">
+              <h3>CODEMEET 2026</h3>
+              <p>Workshops, competitions and a 24-hour national-level hackathon.</p>
+              <div class="event-meta"><span>⌖ SUIET, Mukka</span><span>◷ 31 Oct–2 Nov</span></div>
+              <div class="status-row" style="margin-top:8px"><span class="status-pill up">UPCOMING</span></div>
+            </div>
+          </div>
+          <div class="event-footer">
+            <span class="tag tag-blue">Hackathon &amp; Tech</span>
+            <button class="register-btn" data-event="CODEMEET 2026">View event ↗</button>
+          </div>
+        </article>
+
+        <article class="event-card" data-event="ECHOSPHERE 2.0" data-category="Cultural" data-status="Upcoming"
+          data-search="echosphere concert night najran kabeer benjamin solomon open air auditorium suiet">
+          <div class="event-image image-carnival">
+            <span class="image-label">CONCERT NIGHT</span>
+            <span class="carnival-sun">✹</span>
+            <span class="carnival-title">ECHO<br>SPHERE</span>
+            <span class="carnival-ribbon">ECHOSPHERE 2.0</span>
+          </div>
+          <div class="event-info">
+            <div class="event-date date-yellow"><span>NOV</span><strong>02</strong></div>
+            <div class="event-details">
+              <h3>ECHOSPHERE 2.0</h3>
+              <p>Concert night featuring Najran Kabeer and Benjamin Solomon.</p>
+              <div class="event-meta"><span>⌖ Open Air Auditorium, SUIET</span><span>◷ 6:00 PM</span></div>
+              <div class="status-row" style="margin-top:8px"><span class="status-pill up">UPCOMING</span></div>
+            </div>
+          </div>
+          <div class="event-footer">
+            <span class="tag tag-yellow">Music &amp; Arts</span>
+            <button class="register-btn" data-event="ECHOSPHERE 2.0">View event ↗</button>
+          </div>
+        </article>
+
+        <article class="event-card" data-event="Tech Yuva 2026" data-category="Technical" data-status="Past"
+          data-search="tech yuva national level techno cultural sports fest suiet mukka march">
+          <div class="event-image image-design">
+            <span class="image-label">TECHNO-CULTURAL</span>
+            <span class="design-shape shape-a"></span>
+            <span class="design-shape shape-b"></span>
+            <span class="design-title">TECH<br>YUVA.</span>
+          </div>
+          <div class="event-info">
+            <div class="event-date date-orange"><span>MAR</span><strong>09–12</strong></div>
+            <div class="event-details">
+              <h3>Tech Yuva 2026</h3>
+              <p>National-level techno-cultural and sports fest at SUIET Mukka.</p>
+              <div class="event-meta"><span>⌖ SUIET, Mukka</span><span>◷ 9, 10 &amp; 12 Mar 2026</span></div>
+              <div class="status-row" style="margin-top:8px"><span class="status-pill past">COMPLETED</span></div>
+            </div>
+          </div>
+          <div class="event-footer">
+            <span class="tag tag-orange">University Fest</span>
+            <button class="register-btn" data-event="Tech Yuva 2026">View event ↗</button>
+          </div>
+        </article>
+      </div>
+
+      <div class="empty-state" id="emptyState" hidden>
+        <span>⌕</span>
+        <h3>No events found</h3>
+        <p>Try another search or choose a different filter.</p>
+        <button id="resetFilters" class="button button-dark">Show all events</button>
+      </div>
+      <p style="font-size:10px;color:#8b889d;line-height:1.5;margin-top:16px">Please check official event pages for the
+        latest schedules and registration status.</p>
+    </section>
+
+    <section class="join-banner" id="about">
+      <div class="join-symbol">✳</div>
+      <div>
+        <div class="eyebrow">BE PART OF IT</div>
+        <h2>Your campus story is waiting.</h2>
+        <p>Explore events, discover activities, and stay connected with campus life.</p>
+      </div>
+      <a href="#events" class="button button-light">Explore events →</a>
+    </section>
+  </main>
+
+  <footer>
+    <a class="brand footer-brand" href="#home"><span class="brand-icon">✦</span> Srinivas<span>Nexus</span></a>
+    <p>Made for campus life. Built for connection.</p>
+    <span>Cloud-Based Campus Event Hub · SrinivasNexus</span>
+  </footer>
+
+  <!-- Modal Backdrop & Dialog -->
+  <div class="modal-backdrop" id="eventModal" hidden>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <button class="modal-close" id="closeModal" aria-label="Close dialog">×</button>
+      <div class="modal-icon">✦</div>
+      <div class="eyebrow">EVENT DETAILS</div>
+      <h2 id="modalTitle">Event title</h2>
+      <p id="modalDescription"></p>
+      <div class="modal-facts">
+        <div><span>DATE</span><strong id="modalDate"></strong></div>
+        <div><span>VENUE</span><strong id="modalVenue"></strong></div>
+        <div><span>TIME</span><strong id="modalTime"></strong></div>
+        <div><span>STATUS</span><strong id="modalStatus"></strong></div>
+      </div>
+      <a id="officialEventLink" class="modal-official-link" href="#" target="_blank" rel="noopener" hidden>Open official
+        event page ↗</a>
+
+      <div class="past-notice" id="pastEventNotice" hidden>
+        <span>🗓️</span>
+        <div>
+          <strong>Event Concluded</strong>
+          <p>This event has already taken place. Registrations are closed.</p>
+        </div>
+      </div>
+
+      <form id="registrationForm">
+        <label for="studentName">Your name</label>
+        <input id="studentName" type="text" placeholder="Enter your full name" required>
+        <label for="studentEmail">College email</label>
+        <input id="studentEmail" type="email" placeholder="you@example.com" required>
+        <button class="button button-dark submit-btn" type="submit">Register interest →</button>
+        <p class="form-note">Your registration is securely saved in the SrinivasNexus database.</p>
+      </form>
+
+      <div class="success-message" id="successMessage" hidden>
+        <span>✓</span>
+        <div>
+          <strong>Thanks for your interest!</strong>
+          <p></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+
+  <!-- Firebase & Realtime Announcements with Local Caching -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-app.js";
+    import {
+      getFirestore,
+      collection,
+      getDocs,
+      addDoc,
+      serverTimestamp
+    } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCb70w-6fEzP2CljWWSmTG2Vw6uhvBp-bI",
+      authDomain: "campus-pulse-b1181.firebaseapp.com",
+      projectId: "campus-pulse-b1181",
+      storageBucket: "campus-pulse-b1181.firebasestorage.app",
+      messagingSenderId: "213215309165",
+      appId: "1:213215309165:web:93785658491b3d5a81fe64",
+      measurementId: "G-JZ9HX594HN"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    window.srinivasNexusDB = db;
+    window.campusPulseDB = db;
+    window.saveRegistrationToFirestore = async function (regData) {
+      return await addDoc(collection(db, "registrations"), {
+        ...regData,
+        createdAt: serverTimestamp()
+      });
+    };
+
+    console.log("SrinivasNexus Firebase initialized!");
+
+    const announcementsList = document.getElementById("announcementsList");
+    const drawerBadge = document.getElementById("drawerBadge");
+    const floatingBadge = document.getElementById("floatingBadge");
+    const navAlertBadge = document.getElementById("navAlertBadge");
+
+    function renderAnnouncements(items) {
+      if (!items || items.length === 0) {
+        announcementsList.innerHTML = '<p style="color:var(--muted);text-align:center;padding:20px 0;">No new announcements at this time.</p>';
+        if (drawerBadge) drawerBadge.textContent = "0";
+        if (floatingBadge) floatingBadge.textContent = "0";
+        return;
+      }
+
+      announcementsList.innerHTML = "";
+      items.forEach((item) => {
+        const card = document.createElement("article");
+        const title = document.createElement("h4");
+        const message = document.createElement("p");
+        title.textContent = item.title || "Announcement";
+        message.textContent = item.message || "";
+        card.appendChild(title);
+        card.appendChild(message);
+        announcementsList.appendChild(card);
+      });
+
+      const count = items.length;
+      if (drawerBadge) drawerBadge.textContent = count;
+      if (floatingBadge) floatingBadge.textContent = count;
+      if (navAlertBadge) navAlertBadge.style.display = count > 0 ? "block" : "none";
+    }
+
+    // Fast-path: Load cached announcements from localStorage
+    try {
+      const cached = localStorage.getItem("srinivasnexus_announcements_cache");
+      if (cached) {
+        const cachedData = JSON.parse(cached);
+        renderAnnouncements(cachedData);
+      }
+    } catch (e) { }
+
+    // Network-path: Fetch latest from Firestore & update cache
+    try {
+      const snapshot = await getDocs(collection(db, "announcements"));
+      const freshItems = [];
+      snapshot.forEach(doc => {
+        freshItems.push(doc.data());
+      });
+      renderAnnouncements(freshItems);
+      localStorage.setItem("srinivasnexus_announcements_cache", JSON.stringify(freshItems));
+    } catch (error) {
+      console.warn("Could not fetch announcements from cloud:", error);
+    }
+  </script>
+
+  <!-- PWA Service Worker Registration -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+          .then(reg => console.log('SrinivasNexus ServiceWorker registered:', reg.scope))
+          .catch(err => console.log('ServiceWorker registration error:', err));
+      });
+    }
+  </script>
+</body>
+
+</html>

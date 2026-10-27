@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4e31d4" />
+      <stop offset="50%" stop-color="#6d4aff" />
+      <stop offset="100%" stop-color="#a45eff" />
+    </linearGradient>
+    <linearGradient id="glowGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffdc89" />
+      <stop offset="100%" stop-color="#ff6b95" />
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="16" stdDeviation="20" flood-color="#241459" flood-opacity="0.35"/>
+    </filter>
+  </defs>
+  <rect width="512" height="512" rx="128" fill="url(#bgGrad)"/>
+  <circle cx="256" cy="256" r="160" stroke="rgba(255,255,255,0.18)" stroke-width="4" fill="none" stroke-dasharray="12 12" />
+  <g filter="url(#shadow)">
+    <!-- 4-point star / nexus spark -->
+    <path d="M256 110 Q256 256 110 256 Q256 256 256 402 Q256 256 402 256 Q256 256 256 110 Z" fill="#ffffff" />
+    <circle cx="256" cy="256" r="38" fill="url(#glowGrad)" />
+  </g>
+</svg>
+
